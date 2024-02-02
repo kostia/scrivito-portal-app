@@ -9,7 +9,7 @@
     "eslint": "eslint --max-warnings 0 'src/**/*.ts' 'src/**/*.tsx'",
     "prettier": "prettier --check .",
     "start-design": "vite --config design/vite-design.config.ts",
-    "start": "vite"
+    "start": "concurrently --raw 'vite --force' 'nodemon --watch ../scrivito_js/js/build/npm_scrivito'"
   },
   "dependencies": {
     "highlight-words-core": "^1.2.2",
@@ -39,6 +39,7 @@
     "@typescript-eslint/parser": "^7.5.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "bootstrap-icons": "^1.11.3",
+    "concurrently": "^8.2.2",
     "content-security-policy-builder": "^2.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
@@ -49,5 +50,6 @@
     "sass": "^1.72.0",
     "typescript": "^5.4.3",
     "vite": "^5.2.7"
+    "nodemon": "^3.0.3",
   }
 }
