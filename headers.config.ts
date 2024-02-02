@@ -5,12 +5,31 @@ function headers(environment: string) {
     'Content-Security-Policy': cspBuilder({
       directives: {
         'base-uri': "'none'",
-        'default-src': ["'self'", 'data:', 'https:', 'wss:'],
-        'style-src': ["'self'", 'data:', 'https:', 'wss:', "'unsafe-inline'"],
+        'default-src': [
+          "'self'",
+          'data:',
+          'https:',
+          'wss:',
+          'ws:',
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          'http:',
+        ],
+        'style-src': [
+          "'self'",
+          'data:',
+          'https:',
+          'wss:',
+          "'unsafe-inline'",
+          'http:',
+        ],
         'script-src': [
           "'self'",
           'https://api.scrivito.com',
           'https://assets.scrivito.com',
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          'http:',
         ].concat(
           // The package `@vitejs/plugin-react-swc` include an inline script into index.html (see [1]).
           // [1] https://github.com/vitejs/vite-plugin-react-swc/blob/17bb3ab6f0223f2c19d5cb3b9097457418188da5/src/index.ts#L17C7-L20
@@ -32,6 +51,7 @@ function headers(environment: string) {
     'X-XSS-Protection': '1; mode=block',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Access-Control-Allow-Origin': '*',
   }
 }
 
