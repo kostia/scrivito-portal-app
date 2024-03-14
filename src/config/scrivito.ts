@@ -17,6 +17,7 @@ export function configureScrivito() {
     siteForUrl,
     strictSearchOperators: true,
     tenant: scrivitoTenantId(),
+    iamAuthLocation: `${window.location.origin}/jr-api`,
     // @ts-expect-error // TODO: Remove later on
     unstable: {
       assetUrlBase: 'http://localhost:8091',
