@@ -1,6 +1,7 @@
 import { provideDataClass } from 'scrivito'
 import { pseudoRandom32CharHex } from './pseudoRandom32CharHex'
 import { orderBy } from 'lodash-es'
+import { DataClassAttributes } from '../Data/types'
 
 interface DataItem {
   _id: string
@@ -13,12 +14,14 @@ export function provideLocalStorageDataClass(
     initialContent,
     prepareData,
     postProcessData,
+    attributes,
   }: {
     initialContent?: DataItem[]
     prepareData?: (
       data: Record<string, unknown>,
     ) => Promise<Record<string, unknown>>
     postProcessData?: (data: DataItem) => Promise<DataItem>
+    attributes?: DataClassAttributes
   } = {},
 ) {
   const recordKey = `localDataClass-${className}`
@@ -112,6 +115,7 @@ export function provideLocalStorageDataClass(
         persistRecord(record)
       },
     },
+    attributes,
   })
 
   async function initializeContent(initialContent: DataItem[]) {
