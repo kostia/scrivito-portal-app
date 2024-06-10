@@ -4,6 +4,9 @@ import { pseudoRandom32CharHex } from '../../../utils/pseudoRandom32CharHex'
 
 export function localStorageTicketDataClass() {
   return provideLocalStorageDataClass('Ticket', {
+    attributes: {
+      responsibleAgent: ['reference', { to: 'User' }],
+    },
     prepareData: async (data) => {
       const newData = await convertBlobAttributes(data)
 
