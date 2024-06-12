@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { uiContext, canWrite, connect, Widget } from 'scrivito'
+import {
+  Link,
+  navigateTo,
+  uiContext,
+  canWrite,
+  connect,
+  Widget,
+} from 'scrivito'
 import Draggable from 'react-draggable'
 import { isEqual, times } from 'lodash-es'
 import {
@@ -47,7 +54,13 @@ const ColumnsEditor = connect(
     )
 
     return (
-      <div className="scrivito_detail_content">
+      <div
+        className="scrivito_detail_content"
+        onClick={() => {
+          window.alert('boom!')
+          navigateTo(new Link({ url: 'https://scrivito.com' }))
+        }}
+      >
         <Alignment
           alignment={widget.get('alignment')}
           setAlignment={(
