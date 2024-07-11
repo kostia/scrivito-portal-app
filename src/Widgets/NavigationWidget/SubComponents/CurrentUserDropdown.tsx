@@ -8,6 +8,11 @@ import {
   LinkTag,
   logout,
   urlFor,
+  Obj,
+  unstable_isInOfflineMode,
+  unstable_enterOfflineMode,
+  unstable_leaveOfflineMode,
+  load,
 } from 'scrivito'
 import { NavigationWidgetInstance } from '../NavigationWidgetClass'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -70,6 +75,35 @@ export const CurrentUserDropdown = connect(function CurrentUserDropdown({
           </li>
         </>
       ) : null}
+
+      <NavDropdown.Item
+        eventKey={`MetaNavigation-Offline`}
+        key={`MetaNavigation-Offline`}
+        onClick={async () => {
+          if (unstable_isInOfflineMode()) {
+            unstable_leaveOfflineMode()
+          } else {
+            // preload content, before actually going offline
+            await load(() =>
+              Obj.onAllSites()
+                .all()
+                .take()
+                .forEach((obj) => {
+                  // cache widgets
+                  obj.widgets()
+                  // cache metadata
+                  obj.contentType()
+                }),
+            )
+            unstable_enterOfflineMode()
+          }
+        }}
+      >
+        {unstable_isInOfflineMode() ? 'Go Online' : 'Go Offline'}
+      </NavDropdown.Item>
+      <li>
+        <hr className="dropdown-divider" />
+      </li>
 
       <LogOutButton root={root} />
     </NavDropdown>
