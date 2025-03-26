@@ -1,7 +1,16 @@
+import escape from 'lodash-es/escape';
+import isDate from 'lodash-es/isDate';
+
 import { currentSiteId } from 'scrivito_sdk/app_support/current_page';
 import { getDetailsPageAndQuery } from 'scrivito_sdk/app_support/get_details_page_url';
 import { hasComponent } from 'scrivito_sdk/app_support/has_component';
-import { InternalError, logError } from 'scrivito_sdk/common';
+import {
+  InternalError,
+  assumeString,
+  convertToFloat,
+  convertToInteger,
+  logError,
+} from 'scrivito_sdk/common';
 import {
   DataItem,
   DataItemAttribute,
@@ -106,7 +115,7 @@ function attributeToBasicValue<T extends CmsAttributeType>(
     );
   }
 
-  throw new InternalError('Not yet implemented');
+  return externalAttributeToBasicValue(dataAttribute, typeInfo);
 }
 
 function itemToBasicValue<T extends CmsAttributeType>(
@@ -142,8 +151,8 @@ function itemToLink(dataItem: DataItem) {
   const detailsPageAndQuery = getDetailsPageAndQuery(dataItem, currentSiteId());
 
   if (detailsPageAndQuery) {
-    const { detailsPage, query } = detailsPageAndQuery;
-    link = new BasicLink({ objId: detailsPage.id(), query });
+    const { detailsPage, queryString } = detailsPageAndQuery;
+    link = new BasicLink({ objId: detailsPage.id(), query: queryString });
   }
 
   return link;
@@ -168,11 +177,158 @@ function objAttributeToBasicValue<T extends CmsAttributeType>(
   return basicObj.get(attributeName, typeInfo);
 }
 
+function externalAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const externalAttributeType = dataAttribute.attributeDefinition()?.[0];
+
+  if (externalAttributeType === 'string') {
+    return externalStringAttributeToBasicValue(dataAttribute, typeInfo);
+  }
+
+  if (externalAttributeType === 'enum') {
+    return externalEnumAttributeToBasicValue(dataAttribute, typeInfo);
+  }
+
+  if (externalAttributeType === 'number') {
+    return externalNumberAttributeToBasicValue(dataAttribute, typeInfo);
+  }
+
+  if (externalAttributeType === 'boolean') {
+    return externalBooleanAttributeToBasicValue(dataAttribute, typeInfo);
+  }
+
+  if (externalAttributeType === 'date') {
+    return externalDateAttributeToBasicValue(dataAttribute, typeInfo);
+  }
+
+  if (externalAttributeType === 'reference') {
+    return externalReferenceAttributeToBasicValue(dataAttribute, typeInfo);
+  }
+
+  return null;
+}
+
+function externalStringAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const value = assumeString(dataAttribute.get());
+  const [targetAttributeType, targetTypeInfoConfig] = typeInfo;
+
+  switch (targetAttributeType) {
+    case 'string':
+      return value;
+    case 'html':
+      return escape(value);
+    case 'enum':
+      return externalStringAttributeToEnumValue(value, targetTypeInfoConfig);
+    case 'multienum':
+      return toList(
+        externalStringAttributeToEnumValue(value, targetTypeInfoConfig)
+      );
+    case 'stringlist':
+      return toList(value);
+    default:
+      return null;
+  }
+}
+
+function externalEnumAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const value = assumeStringOrNull(dataAttribute.get());
+  const [targetAttributeType] = typeInfo;
+
+  if (value === null) {
+    switch (targetAttributeType) {
+      case 'string':
+        return '';
+      case 'multienum':
+        return [];
+      default:
+        return null;
+    }
+  }
+
+  return externalStringAttributeToBasicValue(dataAttribute, typeInfo);
+}
+
+function externalNumberAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const value = assumeNumber(dataAttribute.get());
+  const [targetAttributeType] = typeInfo;
+
+  switch (targetAttributeType) {
+    case 'float':
+      return convertToFloat(value);
+    case 'integer':
+      return convertToInteger(value);
+    default:
+      return null;
+  }
+}
+
+function externalBooleanAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const value = assumeBoolean(dataAttribute.get());
+  const [targetAttributeType] = typeInfo;
+
+  return targetAttributeType === 'boolean' ? value : toDefaultValue('boolean');
+}
+
+function externalDateAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const value = assumeDateOrNull(dataAttribute.get());
+  const [targetAttributeType] = typeInfo;
+
+  return targetAttributeType === 'date' || targetAttributeType === 'datetime'
+    ? value
+    : null;
+}
+
+function externalReferenceAttributeToBasicValue<T extends CmsAttributeType>(
+  dataAttribute: DataItemAttribute,
+  typeInfo: BasicTypeInfo<T>
+) {
+  const value = dataAttribute.get();
+
+  if (value instanceof DataItem) {
+    switch (typeInfo[0]) {
+      case 'link':
+        return itemToLink(value);
+      case 'linklist':
+        return toList(itemToLink(value));
+      default:
+        null;
+    }
+  }
+
+  return null;
+}
+
+function externalStringAttributeToEnumValue(
+  value: string,
+  typeInfoConfig: BasicTypeInfo<'enum'>[1]
+) {
+  return typeInfoConfig.values.includes(value) ? value : null;
+}
+
 function toDefaultValue<T extends CmsAttributeType>(attributeType: T) {
   switch (attributeType) {
     case 'linklist':
     case 'referencelist':
       return [];
+    case 'boolean':
+      return false;
     default:
       return null;
   }
@@ -180,4 +336,24 @@ function toDefaultValue<T extends CmsAttributeType>(attributeType: T) {
 
 function getTypeInfo(content: Obj | Widget, attributeName: string) {
   return Schema.forInstance(content)?.attributes()[attributeName];
+}
+
+function assumeStringOrNull(value: unknown): string | null {
+  if (value === null || typeof value === 'string') return value;
+  throw new InternalError();
+}
+
+function assumeBoolean(value: unknown) {
+  if (typeof value === 'boolean') return value;
+  throw new InternalError();
+}
+
+function assumeNumber(value: unknown) {
+  if (typeof value === 'number') return value;
+  throw new InternalError();
+}
+
+function assumeDateOrNull(value: unknown): Date | null {
+  if (value === null || isDate(value)) return value;
+  throw new InternalError();
 }

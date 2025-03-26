@@ -918,7 +918,7 @@ export declare const LinkTag: React_2.FunctionComponent<{
     children?: React_2.ReactNode;
 }>;
 
-declare type LinkTagTo = Obj | Link | DataItem | null;
+declare type LinkTagTo = Obj | Link | DataItem | string | null;
 
 declare interface LivingComponentGroupDescription {
     title: string;
@@ -1522,7 +1522,7 @@ declare interface SuggestOptions {
     limit?: number;
 }
 
-declare type Target = Obj | Link | DataItem | null;
+declare type Target = Obj | Link | DataItem | string | null;
 
 declare type TargetFunction = () => Target;
 

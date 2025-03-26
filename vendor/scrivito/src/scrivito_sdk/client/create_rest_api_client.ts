@@ -46,7 +46,8 @@ async function fetch(
     ...(authViaInstance && { authViaInstance }),
   });
 
-  return withLoginHandler(handler, () =>
-    fetchJson(url, { data, authProvider, headers, params, method })
-  );
+  const fetchFn = () =>
+    fetchJson(url, { data, authProvider, headers, params, method });
+
+  return method === 'GET' ? withLoginHandler(handler, fetchFn) : fetchFn();
 }

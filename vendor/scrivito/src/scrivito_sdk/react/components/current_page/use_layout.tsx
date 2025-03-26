@@ -13,10 +13,10 @@ import {
   getLayoutComponentForAppClass,
   hasLayoutComponents,
 } from 'scrivito_sdk/react/component_registry';
+import { CurrentEditableArea } from 'scrivito_sdk/react/components/current_editable_area';
 import { CurrentPage } from 'scrivito_sdk/react/components/current_page';
 import { DetailsPageDataContext } from 'scrivito_sdk/react/components/current_page/details_page_data_context';
 import { PageDataContext } from 'scrivito_sdk/react/components/current_page/page_data_context';
-import { CurrentEditableAreaContext } from 'scrivito_sdk/react/current_editable_area_context';
 import { connect } from 'scrivito_sdk/react_connect';
 import { wrapInAppClass } from 'scrivito_sdk/realm';
 
@@ -81,9 +81,7 @@ const PageLayout = connect(function PageLayout({
   return (
     <PageDataContext page={page}>
       <DetailsPageDataContext page={page} params={params}>
-        <CurrentEditableAreaContext.Provider
-          value={calculateCurrentEditableArea()}
-        >
+        <CurrentEditableArea value={calculateCurrentEditableArea}>
           <LayoutIndexContext.Provider value={layoutIndex + 1}>
             {Component ? (
               <Component page={wrapInAppClass(page)} />
@@ -91,7 +89,7 @@ const PageLayout = connect(function PageLayout({
               <CurrentPage />
             )}
           </LayoutIndexContext.Provider>
-        </CurrentEditableAreaContext.Provider>
+        </CurrentEditableArea>
       </DetailsPageDataContext>
     </PageDataContext>
   );

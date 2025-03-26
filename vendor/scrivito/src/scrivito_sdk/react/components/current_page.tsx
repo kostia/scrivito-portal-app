@@ -5,8 +5,8 @@ import { getCurrentPageData } from 'scrivito_sdk/app_support/current_page_data';
 import { NavigationState } from 'scrivito_sdk/app_support/navigation_state';
 import { BasicObj } from 'scrivito_sdk/models';
 import { AutomaticDataContext } from 'scrivito_sdk/react/components/automatic_data_context';
+import { CurrentEditableArea } from 'scrivito_sdk/react/components/current_editable_area';
 import { PageScroll } from 'scrivito_sdk/react/components/page_scroll';
-import { CurrentEditableAreaContext } from 'scrivito_sdk/react/current_editable_area_context';
 import { getComponentForPageClass } from 'scrivito_sdk/react/get_component_for_page_class';
 import { connect } from 'scrivito_sdk/react_connect';
 import { wrapInAppClass } from 'scrivito_sdk/realm';
@@ -51,7 +51,7 @@ const CurrentPageWithLayout = connect(function CurrentPageWithLayout({
     <PageDataContext page={currentPage}>
       <DetailsPageDataContext page={currentPage} params={params}>
         <AutomaticDataContext content={currentPage}>
-          <CurrentEditableAreaContext.Provider value={'currentPage'}>
+          <CurrentEditableArea value="currentPage">
             <PageScroll navigationState={navigationState} />
             {PageComponent && (
               <PageComponent
@@ -59,7 +59,7 @@ const CurrentPageWithLayout = connect(function CurrentPageWithLayout({
                 params={params}
               />
             )}
-          </CurrentEditableAreaContext.Provider>
+          </CurrentEditableArea>
         </AutomaticDataContext>
       </DetailsPageDataContext>
     </PageDataContext>
