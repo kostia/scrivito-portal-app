@@ -49,6 +49,7 @@ provideEditingConfig(Page, {
     },
   },
   properties: [
+    'body',
     ...defaultPageProperties,
     'hideInNavigation',
     'excludeFromSearch',

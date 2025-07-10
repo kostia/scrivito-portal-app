@@ -21,6 +21,7 @@ async function attributes(): Promise<DataAttributeDefinitions> {
   const lang = await load(() => currentLanguage())
 
   return {
+    _id: ['string', { title: 'IDDDDDDIIIIIII' }],
     company: ['string', { title: lang === 'de' ? 'Firma' : 'Company' }],
     email: ['string', { title: lang === 'de' ? 'E-Mail' : 'Email' }],
     familyName: [
@@ -85,6 +86,7 @@ export const CurrentUser = provideDataItem('CurrentUser', {
       const { pisaUserId, salesUserId, serviceUserId } = await pisaIds()
 
       return {
+        _id: user.id(),
         email: user.email(),
         picture: user.picture() || personCircle,
         jrUserId: user.id(),

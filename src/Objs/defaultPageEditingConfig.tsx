@@ -9,7 +9,7 @@ export const defaultPageEditingConfigAttributes = {
     description: 'Limit to 55 characters.',
   },
   description: {
-    title: 'Page description',
+    title: 'Page description 123',
     description: 'Limit to 175, ideally 150 characters.',
   },
   robotsIndex: {
