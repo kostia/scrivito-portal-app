@@ -7,6 +7,7 @@ export const Ticket = provideDataClass(
     const restApi = await pisaConfig('portal/ticket')
 
     if (!restApi) {
+      console.log('### LOADED!!!!!!!')
       return (await import('./ticketParamsFallback')).ticketParamsFallback()
     }
 
