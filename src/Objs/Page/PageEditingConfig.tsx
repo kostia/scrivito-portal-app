@@ -50,7 +50,14 @@ provideEditingConfig(Page, {
     },
   },
   properties: [
-    ...defaultPageProperties,
+    [
+      'title',
+      {
+        component: ({ obj }) => (
+          <h1 style={{ background: 'white' }}>{obj.get('title')}</h1>
+        ),
+      },
+    ],
     'hideInNavigation',
     'excludeFromSearch',
   ],
