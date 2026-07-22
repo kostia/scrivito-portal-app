@@ -12,6 +12,7 @@ import { SectionWidget } from '../../Widgets/SectionWidget/SectionWidgetClass'
 import { HeadlineWidget } from '../../Widgets/HeadlineWidget/HeadlineWidgetClass'
 import { TextWidget } from '../../Widgets/TextWidget/TextWidgetClass'
 import { jwtPisaSalesConfigSite } from '../../Data/jwtPisaSalesApiConfig'
+import { FacebookPreview } from './FacebookPreview'
 
 provideEditingConfig(Homepage, {
   title: 'Homepage',
@@ -141,6 +142,12 @@ provideEditingConfig(Homepage, {
         'siteFacebookAppId',
         'siteTwitterSite',
         'siteSinglePage',
+        {
+          key: 'facebookPreview',
+          component: FacebookPreview,
+          title: 'Facebook preview',
+          description: 'How this page appears when shared on Facebook',
+        },
       ],
       key: 'site-settings-group',
     },
