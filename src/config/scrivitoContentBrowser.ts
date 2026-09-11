@@ -27,6 +27,7 @@ function filterForObjClass(objClass: string) {
         },
       },
     },
+    ...moreFilters(),
   }
 }
 
@@ -50,6 +51,7 @@ function filtersForObjClasses(objClasses: string[]) {
         ),
       },
     },
+    ...moreFilters(),
   }
 }
 
@@ -82,6 +84,12 @@ function defaultFilters() {
         Font: filterOptionForObjClass('Font'),
       },
     },
+    ...moreFilters(),
+  }
+}
+
+function moreFilters() {
+  return {
     _modification: {
       title: 'Changed',
       type: 'checkbox' as const,
@@ -96,7 +104,71 @@ function defaultFilters() {
         },
       },
     },
+    _language: {
+      title: 'Language',
+      type: 'radioButton' as const,
+      field: '_language',
+      options: {
+        en: { title: 'English', value: 'en' },
+        de: { title: 'German', value: 'de' },
+        fr: { title: 'French', value: 'fr' },
+        it: { title: 'Italian', value: 'it' },
+      },
+    },
+    layoutMainBackgroundColor: {
+      title: 'Main background color',
+      type: 'radioButton' as const,
+      field: 'layoutMainBackgroundColor',
+      options: BACKGROUND_COLORS.reduce(
+        (result, value) => {
+          result[value] = { title: titleize(value), value }
+          return result
+        },
+        {} as { [key: string]: { title: string; value: string } },
+      ),
+    },
+    tags: {
+      title: 'Keywords',
+      type: 'checkbox' as const,
+      field: 'tags',
+      options: TAGS.reduce(
+        (result, value) => {
+          result[value] = { title: titleize(value), value }
+          return result
+        },
+        {} as { [key: string]: { title: string; value: string } },
+      ),
+    },
+    robotsIndex: {
+      title: 'Indexed by search engines',
+      type: 'radioButton' as const,
+      options: {
+        indexed: {
+          title: 'Indexed',
+          query: Obj.where('robotsIndex', 'equals', true),
+        },
+        notIndexed: {
+          title: 'Not indexed',
+          query: Obj.where('robotsIndex', 'equals', false),
+        },
+      },
+    },
+    layoutShowLeftSidebar: {
+      title: 'Sidebar',
+      type: 'radioButton' as const,
+      options: {
+        withLeftSidebar: {
+          title: 'With left sidebar',
+          query: Obj.where('layoutShowLeftSidebar', 'equals', true),
+        },
+      },
+    },
   }
+}
+
+function titleize(value: string) {
+  const withSpaces = value.replace(/-/g, ' ')
+  return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1)
 }
 
 function filterOptionForObjClass(
@@ -131,6 +203,22 @@ const FILTER_PRESENTATIONS = {
   Redirect: { title: 'Redirects', icon: 'link' },
   Video: { title: 'Videos', icon: 'video' },
 }
+
+const BACKGROUND_COLORS = [
+  'white',
+  'primary',
+  'secondary',
+  'light-grey',
+  'middle-grey',
+  'dark-grey',
+  'transparent',
+  'success',
+  'info',
+  'warning',
+  'danger',
+]
+
+const TAGS = ['background', 'icon', 'logo', 'people', 'portrait', 'product']
 
 const PAGES = [
   'Page',
