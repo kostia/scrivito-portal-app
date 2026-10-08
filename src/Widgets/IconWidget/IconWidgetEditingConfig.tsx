@@ -1,12 +1,16 @@
-import { provideEditingConfig, Widget } from 'scrivito'
+import { provideEditingConfig } from 'scrivito'
 import { IconWidget } from './IconWidgetClass'
 import Thumbnail from './thumbnail.svg'
-import { ScrivitoBootstrapIconPicker } from '@justrelate/icon-picker'
 
 provideEditingConfig(IconWidget, {
   title: 'Icon',
   thumbnail: Thumbnail,
   attributes: {
+    icon: {
+      title: 'Icon',
+      editor: 'iconPicker',
+      options: { iconFont: 'bootstrap-icons', defaultValue: 'box' },
+    },
     alignment: {
       title: 'Alignment',
       description: 'A icon list widget ignores this setting. Default: Left',
@@ -32,23 +36,7 @@ provideEditingConfig(IconWidget, {
       ],
     },
   },
-  properties: [
-    [
-      'icon',
-      {
-        component: ({ widget }: { widget: Widget }) => (
-          <ScrivitoBootstrapIconPicker
-            attribute="icon"
-            defaultValue="box"
-            widget={widget}
-          />
-        ),
-      },
-    ],
-    'size',
-    'alignment',
-    'link',
-  ],
+  properties: ['icon', 'size', 'alignment', 'link'],
   initialContent: {
     icon: 'bi-box',
     size: 'bi-2x',

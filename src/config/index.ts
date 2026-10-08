@@ -2,6 +2,7 @@ import { configureErrorReporting } from './configureErrorReporting'
 import { jrPlatformConfigureEtracker } from '../privateJrPlatform/jrPlatformConfigureEtracker'
 import { configurePisaSalesQuestionnaireWidgets } from './configurePisaSalesQuestionnaireWidgets'
 import { configureHistory } from './history'
+import { configureIconFont } from './iconFont'
 import { configureObjClassForContentType } from './objClassForContentType'
 import { configureScrivito } from './scrivito'
 import { configureScrivitoContentBrowser } from './scrivitoContentBrowser'
@@ -13,6 +14,7 @@ export function configure() {
   configureObjClassForContentType()
   configureScrivitoContentBrowser()
   configureHistory()
+  configureIconFont()
   configureErrorReporting()
   configureWindowScrivito()
   configurePisaSalesQuestionnaireWidgets()
