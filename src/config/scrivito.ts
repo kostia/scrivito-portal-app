@@ -11,6 +11,7 @@ export function configureScrivito(options?: { priority?: 'background' }) {
     activateDataIntegration: true,
     adoptUi: 'http://localhost:8090',
     autoConvertAttributes: true,
+    builtInColumnWidgets: true,
     baseUrlForSite,
     contentTagsForEmptyAttributes: false,
     extensionsUrl: `/_scrivito_extensions.html?instanceId=${instanceId}`,
