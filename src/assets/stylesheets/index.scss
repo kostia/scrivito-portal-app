@@ -3,6 +3,11 @@
 /* bs5 imports (used parts depends on project)
  ================================================== */
 
+@import 'scrivito/style-desktop.css' (min-width: 992px);
+@import 'scrivito/style-tablet.css' (min-width: 768px) and
+  (max-width: 991.98px);
+@import 'scrivito/style-mobile.css' (max-width: 767.98px);
+
 @import 'vendor/bs5/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 @import 'scrivito-neoletter-form-widgets/index.css';

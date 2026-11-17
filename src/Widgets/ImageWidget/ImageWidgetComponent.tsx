@@ -36,6 +36,7 @@ provideComponent(ImageWidget, ({ widget }) => {
           className={widget.get('roundCorners') ? 'rounded' : undefined}
           attribute="image"
           content={widget}
+          withStyle
           style={style}
         />
       </LinkWrapper>

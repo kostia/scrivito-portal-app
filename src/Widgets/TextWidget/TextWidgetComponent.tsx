@@ -8,5 +8,6 @@ provideComponent(TextWidget, ({ widget }) => (
     className={alignmentClassName(widget.get('alignment'))}
     content={widget}
     tag="div"
+    withStyle
   />
 ))

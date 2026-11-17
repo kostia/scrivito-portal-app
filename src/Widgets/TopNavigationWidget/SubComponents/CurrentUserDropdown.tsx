@@ -1,6 +1,5 @@
 import {
   connect,
-  ContentTag,
   currentLanguage,
   isCurrentPage,
   isEditorLoggedIn,
@@ -12,8 +11,6 @@ import {
 import { TopNavigationWidgetInstance } from '../TopNavigationWidgetClass'
 import { NavDropdown, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { ObjIconAndTitle } from '../../../Components/ObjIconAndTitle'
-import { CurrentUser } from '../../../Data/CurrentUser/CurrentUserDataItem'
-import { ensureString } from '../../../utils/ensureString'
 import { HomepageInstance } from '../../../Objs/Homepage/HomepageObjClass'
 import personCircle from '../../../assets/images/person-circle.svg'
 import { Loading } from '../../../Components/Loading'
@@ -37,18 +34,8 @@ export const CurrentUserDropdown = connect(function CurrentUserDropdown({
         <>
           <ProfileImg />
           <span className="nav-link-extended">
-            <ContentTag
-              content={widget}
-              attribute="metaNavigationUserTitle"
-              tag="span"
-            />
-
-            <ContentTag
-              content={widget}
-              attribute="metaNavigationUserDescription"
-              tag="span"
-              className="text-meta"
-            />
+            <span>Jane Doe</span>
+            <span className="text-meta">Tynacoon</span>
           </span>
         </>
       }
@@ -123,7 +110,7 @@ const LogOutButton = connect(function LogOutButton({
 
 const ProfileImg = connect(
   function ProfileImg() {
-    const picture = ensureString(CurrentUser.get('picture')) || personCircle
+    const picture = personCircle
 
     return (
       <>

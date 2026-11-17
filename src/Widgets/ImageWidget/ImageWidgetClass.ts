@@ -9,6 +9,7 @@ export const ImageWidget = provideWidgetClass('ImageWidget', {
     link: 'link',
     objectFit: ['enum', { values: ['cover', 'contain'] }],
     roundCorners: 'boolean',
+    style: 'style',
     width: 'string',
   },
 })

@@ -27,6 +27,7 @@ provideComponent(SectionWidget, ({ widget }) => {
       tag="section"
       className={sectionClassNames.join(' ')}
       onClick={(e) => togglePlayPauseRef.current?.togglePlayPause(e)}
+      withStyle
     >
       <ImageOrVideo
         widget={widget}
